@@ -53,45 +53,6 @@ exports.listUser = async (req, res) => {
   const limit = req.query.size ? parseInt(req.query.size) : 10;
   const offset = req.query.page ? (parseInt(req.query.page) - 1) * limit : 0;
 
-  let search = req.query.search;
-  let searchWords = [];
-
-  if (search == null) {
-    search = '';
-  } else {
-    const words = search.toLowerCase().split(' ');
-    words.forEach((word) => {
-      searchWords.push({
-        [Op.or]: [
-          {
-            fullname: {
-              [Op.like]: `%${word}%`,
-            },
-          },
-          {
-            email: {
-              [Op.like]: `%${word}%`,
-            },
-          },
-          {
-            '$mst_roles.name$': {
-              [Op.like]: `%${word}%`,
-            },
-          },
-          {
-            username: {
-              [Op.like]: `%${word}%`,
-            },
-          },
-          {
-            phone_number: {
-              [Op.like]: `%${word}%`,
-            },
-          }
-        ],
-      });
-    });
-  }
 
   User.findAndCountAll({
     attributes: [
@@ -100,7 +61,6 @@ exports.listUser = async (req, res) => {
       'fullname',
       'username',
       'email',
-      'phone_number',
       'is_active',
       'created_date',
       'created_by',
@@ -114,17 +74,49 @@ exports.listUser = async (req, res) => {
         model: db.mst_roles_model,
         as: 'mst_roles',
         attributes: [
-          [Sequelize.literal('role_id'), 'id'],
+          'id',
           'name',
           'code'
+        ],
+      },
+      {
+        model: db.mst_dokter_model,
+        as: 'mst_dokter',
+        attributes: [
+          'id','code', 'nama', 'jadwal_kerja'
+        ],
+        include: [
+          {
+            model: db.mst_spesialis_model,
+            as: 'mst_spesialis',
+            attributes: [
+              'id',
+              'name',
+              'code',
+            ],
+          },
+        ],
+      },
+      {
+        model: db.mst_pasien_model,
+        as: 'mst_pasien',
+        attributes: [
+          'id', 'code', 'nama', 'usia', 'alamat'
+        ],
+        include: [
+          {
+            model: db.trx_riwayat_pasien_model,
+            as: 'trx_riwayat_pasien',
+            attributes: [
+              'id',
+              'riwayat',
+            ],
+          },
         ],
       }
     ],
     limit,
     offset,
-    where: {
-      [Op.and]: searchWords,
-    },
     order: [['created_date', 'DESC']],
     subQuery: false,
   })
