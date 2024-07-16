@@ -17,6 +17,7 @@ const Dokter = db.mst_dokter_model;
 const User = db.mst_users_model;
 const Role = db.mst_roles_model;
 
+
 exports.create = async (req, res) => {
   const { nama, code, spesialis_id, jadwal_kerja, email, username, password } = req.body;
   try {
@@ -102,3 +103,27 @@ exports.list = (req, res) => {
   }
 };
 
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Dokter.destroy({
+      where: { id: id },
+    })
+      .then(async(result) => {
+        if (result == 0) return response.notFoundResponse(res, `Dokter with id ${id} not found`);
+
+        await User.destroy({
+          where: { pasien_id: id },
+        })
+
+        return response.successResponse(res, `success delete produksi with id ${id}`);
+      })
+
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};

@@ -71,3 +71,24 @@ exports.list = (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Spesialis.destroy({
+      where: { id: id },
+    })
+      .then(async(result) => {
+        if (result == 0) return response.notFoundResponse(res, `Spesialis with id ${id} not found`);
+
+        return response.successResponse(res, `success delete spesialis with id ${id}`);
+      })
+
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};

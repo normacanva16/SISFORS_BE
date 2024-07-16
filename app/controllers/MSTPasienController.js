@@ -17,6 +17,7 @@ const Pasien = db.mst_pasien_model;
 const Riwayat = db.trx_riwayat_pasien_model;
 const User = db.mst_users_model;
 const Role = db.mst_roles_model;
+const JadwalPeriksa = db.trx_jadwal_periksa_model;
 
 exports.create = async (req, res) => {
   const { nama, code, usia, alamat, riwayat, email, username, password } = req.body;
@@ -97,6 +98,39 @@ exports.list = (req, res) => {
         };
         return response.successResponseWithData(res, 'success', payload);
       })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Pasien.destroy({
+      where: { id: id },
+    })
+      .then(async(result) => {
+        if (result == 0) return response.notFoundResponse(res, `Dokter with id ${id} not found`);
+
+        await Riwayat.destroy({
+          where: { pasien_id: id },
+        })
+
+        await User.destroy({
+          where: { pasien_id: id },
+        })
+
+        await JadwalPeriksa.destroy({
+          where: { pasien_id: id },
+        })
+
+        return response.successResponse(res, `success delete produksi with id ${id}`);
+      })
+
       .catch((err) => {
         res.status(500).send({ message: err.message });
       });

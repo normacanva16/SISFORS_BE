@@ -98,3 +98,24 @@ exports.list = (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await JadwalPeriksa.destroy({
+      where: { id: id },
+    })
+      .then(async(result) => {
+        if (result == 0) return response.notFoundResponse(res, `Jadwal Periksa with id ${id} not found`);
+
+        return response.successResponse(res, `success delete jadwal periksa with id ${id}`);
+      })
+
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
