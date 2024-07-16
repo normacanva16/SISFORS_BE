@@ -17,6 +17,7 @@ const Op = db.Sequelize.Op;
 const User = db.mst_users_model;
 const Role = db.mst_roles_model;
 
+
 exports.createUser = async (req, res) => {
   const { role_id, fullname, username, password, email } = req.body;
 
@@ -287,7 +288,7 @@ exports.login = async (req, res) => {
       }
       const findrole = await Role.findOne({ where: { id: req.user.role_id }, attributes: ['id', 'name'] });
 
-      const findUser = await User.findOne({ where: { id: req.user.id }, attributes: [ 'fullname'] });
+      const findUser = await User.findOne({ where: { id: req.user.id }, attributes: [ 'fullname', 'dokter_id','pasien_id'] });
 
       const data = {
         email: req.user.email,
@@ -297,6 +298,8 @@ exports.login = async (req, res) => {
         role_id: findrole.id,
         role_name: findrole.name,
         token: refreshToken,
+        dokter_id: findUser.dataValues.dokter_id,
+        pasien_id: findUser.dataValues.pasien_id
       };
 
       console.log(data);
