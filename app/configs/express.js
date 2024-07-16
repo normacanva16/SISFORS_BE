@@ -5,7 +5,7 @@ const methodOverride = require('method-override');
 const helmet = require('helmet');
 
 const mstroleRoute = require('../routes/mst_role_route');
-
+const mstSpesialisRoute = require('../routes/mst_spesialis_route');
 const userRoute = require('../routes/user_route');
 
 exports.start = (config) => {
@@ -51,8 +51,7 @@ app.use(function(req, res, next) {
 
   app.use('/mst-roles', mstroleRoute)
   app.use('/users', userRoute);
- 
-
+  app.use('/spesialis', mstSpesialisRoute);
 
   try {
     app.listen(config.port, () => {
