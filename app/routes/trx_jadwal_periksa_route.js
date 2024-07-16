@@ -13,4 +13,6 @@ dotEnv.config();
 router.get('', JadwalPeriksaController.list);
 router.post('',JadwalPeriksaController.create);
 router.delete('/:id', verifyToken, authorize.permit(['superadmin']), JadwalPeriksaController.delete);
+router.get('/list-pasien-by-dokter/:dokter_id', JadwalPeriksaController.listPasienByDokter);
+router.get('/list-periksa-by-pasien/:pasien_id', JadwalPeriksaController.listJadwalPeriksaByPasien);
 module.exports = router;
