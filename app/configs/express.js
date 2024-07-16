@@ -7,6 +7,8 @@ const helmet = require('helmet');
 const mstroleRoute = require('../routes/mst_role_route');
 const mstSpesialisRoute = require('../routes/mst_spesialis_route');
 const userRoute = require('../routes/user_route');
+const mstPasienRoute = require('../routes/mst_pasien_route');
+const mstDokterRoute = require('../routes/mst_dokter_route');
 
 exports.start = (config) => {
 
@@ -52,6 +54,8 @@ app.use(function(req, res, next) {
   app.use('/mst-roles', mstroleRoute)
   app.use('/users', userRoute);
   app.use('/spesialis', mstSpesialisRoute);
+  app.use('/dokter', mstDokterRoute);
+  app.use('/pasien', mstPasienRoute);
 
   try {
     app.listen(config.port, () => {
