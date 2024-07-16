@@ -1,4 +1,5 @@
 // Library
+const bcrypt = require('bcryptjs');
 
 // UTILS
 
@@ -13,9 +14,11 @@ const QueryTypes = db.Sequelize.QueryTypes;
 const Op = db.Sequelize.Op;
 
 const Dokter = db.mst_dokter_model;
+const User = db.mst_users_model;
+const Role = db.mst_roles_model;
 
 exports.create = async (req, res) => {
-  const { nama, code, spesialis_id, jadwal_kerja } = req.body;
+  const { nama, code, spesialis_id, jadwal_kerja, email, username, password } = req.body;
   try {
     await Dokter.create(
       {
@@ -34,6 +37,19 @@ exports.create = async (req, res) => {
             id: result.id,
           }
         })
+
+        const findRole = await Role.findOne({ where: { name: 'dokter' } })
+
+        await User.create({
+          fullname: findDokter.nama,
+          email,
+          username,
+          password: bcrypt.hashSync(password, 8),
+          role_id: findRole.id,
+          dokter_id: findDokter.id,
+          is_active: 1
+        })
+
         return response.successResponseWithData(res, 'success', findDokter);
       })
 

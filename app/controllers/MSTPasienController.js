@@ -1,4 +1,5 @@
 // Library
+const bcrypt = require('bcryptjs');
 
 // UTILS
 
@@ -14,9 +15,11 @@ const Op = db.Sequelize.Op;
 
 const Pasien = db.mst_pasien_model;
 const Riwayat = db.trx_riwayat_pasien_model;
+const User = db.mst_users_model;
+const Role = db.mst_roles_model;
 
 exports.create = async (req, res) => {
-  const { nama, code, usia, alamat, riwayat } = req.body;
+  const { nama, code, usia, alamat, riwayat, email, username, password } = req.body;
   try {
     await Pasien.create(
       {
@@ -35,6 +38,19 @@ exports.create = async (req, res) => {
             id: result.id,
           }
         })
+
+        const findRole = await Role.findOne({ where: { name: 'pasien' } })
+
+        await User.create({
+          fullname: findPasien.nama,
+          email,
+          username,
+          password: bcrypt.hashSync(password, 8),
+          role_id: findRole.id,
+          pasien_id: findPasien.id,
+          is_active: 1
+        })
+
         await Riwayat.create({
           pasien_id: findPasien.id,
           riwayat
