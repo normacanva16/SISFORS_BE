@@ -57,6 +57,32 @@ exports.list = (req, res) => {
       search,
       searchFields: ['nama'],
       order: [['created_date', 'DESC']],
+      include: [
+        {
+          model: db.mst_pasien_model,
+          as: 'mst_pasien',
+          attributes: [
+            'code', 'nama', 'usia', 'alamat'
+          ],
+        },
+        {
+          model: db.mst_dokter_model,
+          as: 'mst_dokter',
+          include: [
+            {
+              model: db.mst_spesialis_model,
+              as: 'mst_spesialis',
+              attributes: [
+                'id',
+                'name',
+                'code',
+              ],
+            },
+          ],
+          attributes: ['id', 'code', 'nama', 'jadwal_kerja'],
+        },
+      ],
+      attributes: ['jadwal_periksa'],
     })
       .then((data) => {
         const payload = {

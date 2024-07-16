@@ -78,7 +78,17 @@ exports.list = (req, res) => {
       offset,
       search,
       searchFields: ['nama'],
-      order: [['created_date', 'DESC']],
+      include: [
+        {
+          model: db.trx_riwayat_pasien_model,
+          as: 'trx_riwayat_pasien',
+          attributes: [
+            'id',
+            'riwayat',
+          ],
+        },
+      ],
+      attributes: ['id', 'code', 'nama', 'usia', 'alamat'],
     })
       .then((data) => {
         const payload = {

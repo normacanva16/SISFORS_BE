@@ -74,6 +74,18 @@ exports.list = (req, res) => {
       search,
       searchFields: ['nama'],
       order: [['created_date', 'DESC']],
+      include: [
+        {
+          model: db.mst_spesialis_model,
+          as: 'mst_spesialis',
+          attributes: [
+            'id',
+            'name',
+            'code',
+          ],
+        },
+      ],
+      attributes: ['id','code', 'nama', 'jadwal_kerja'],
     })
       .then((data) => {
         const payload = {
@@ -89,3 +101,4 @@ exports.list = (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
