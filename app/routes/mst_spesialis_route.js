@@ -12,6 +12,6 @@ dotEnv.config();
 
 router.get('', SpesialisController.list);
 router.post('',SpesialisController.create);
-router.delete('/:id', verifyToken, authorize.permit(['superadmin']), SpesialisController.delete);
+router.delete('/:id', verifyToken, authorize.permit(['admin']), SpesialisController.delete);
 
 module.exports = router;

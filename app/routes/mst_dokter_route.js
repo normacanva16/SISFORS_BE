@@ -12,6 +12,6 @@ dotEnv.config();
 
 router.get('', DokterController.list);
 router.post('',DokterController.create);
-router.delete('/:id', verifyToken, authorize.permit(['superadmin']), DokterController.delete);
+router.delete('/:id', verifyToken, authorize.permit(['admin']), DokterController.delete);
 
 module.exports = router;

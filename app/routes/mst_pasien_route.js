@@ -12,6 +12,6 @@ dotEnv.config();
 
 router.get('', PasienController.list);
 router.post('',PasienController.create);
-router.delete('/:id', verifyToken, authorize.permit(['superadmin']), PasienController.delete);
+router.delete('/:id', verifyToken, authorize.permit(['admin']), PasienController.delete);
 
 module.exports = router;
