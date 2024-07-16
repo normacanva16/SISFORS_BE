@@ -9,6 +9,7 @@ const mstSpesialisRoute = require('../routes/mst_spesialis_route');
 const userRoute = require('../routes/user_route');
 const mstPasienRoute = require('../routes/mst_pasien_route');
 const mstDokterRoute = require('../routes/mst_dokter_route');
+const jadwalPeriksaRoute = require('../routes/trx_jadwal_periksa_route');
 
 exports.start = (config) => {
 
@@ -56,6 +57,7 @@ app.use(function(req, res, next) {
   app.use('/spesialis', mstSpesialisRoute);
   app.use('/dokter', mstDokterRoute);
   app.use('/pasien', mstPasienRoute);
+  app.use('/jadwal-periksa', jadwalPeriksaRoute);
 
   try {
     app.listen(config.port, () => {

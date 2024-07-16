@@ -20,7 +20,7 @@ module.exports = {
         allowNull: true,
       references: {
         model: {
-          tableName: 'mst_pasien',
+          tableName: 'mst_dokter',
         },
         key: "id",
       }},
