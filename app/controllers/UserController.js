@@ -208,11 +208,46 @@ exports.viewUser = async (req, res) => {
               model: db.mst_roles_model,
               as: 'mst_roles',
               attributes: [
-                [Sequelize.literal('role_id'), 'id'],
+                'id',
                 'name',
                 'code'
               ],
             },
+            {
+              model: db.mst_dokter_model,
+              as: 'mst_dokter',
+              attributes: [
+                'id','code', 'nama', 'jadwal_kerja'
+              ],
+              include: [
+                {
+                  model: db.mst_spesialis_model,
+                  as: 'mst_spesialis',
+                  attributes: [
+                    'id',
+                    'name',
+                    'code',
+                  ],
+                },
+              ],
+            },
+            {
+              model: db.mst_pasien_model,
+              as: 'mst_pasien',
+              attributes: [
+                'id', 'code', 'nama', 'usia', 'alamat'
+              ],
+              include: [
+                {
+                  model: db.trx_riwayat_pasien_model,
+                  as: 'trx_riwayat_pasien',
+                  attributes: [
+                    'id',
+                    'riwayat',
+                  ],
+                },
+              ],
+            }
           ],
         })
         return response.successResponseWithData(res, 'success', finduser);
